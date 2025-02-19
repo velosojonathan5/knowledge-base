@@ -68,19 +68,7 @@ export class InMemoryRepository<T extends VersionedEntity>
     }
   }
 
-  getSubItemsRecursive(topicId: string): T[] {
-    const buildTree = (id: string): any => {
-      const subtopicIds = this.hierarchy.get(id) || new Set();
-      const subtopics = Array.from(subtopicIds).map((subId) =>
-        this.getById(subId)
-      ) as T[];
-
-      return {
-        ...this.getById(id),
-        children: subtopics.map((sub) => buildTree(sub.id)),
-      };
-    };
-
-    return buildTree(topicId);
+  getHierarch(id: string): Set<string> | undefined {
+    return this.hierarchy.get(id);
   }
 }

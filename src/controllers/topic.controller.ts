@@ -44,4 +44,15 @@ export class TopicController {
     const topics = this.topicService.getSubtopics(id);
     res.json(topics);
   }
+
+  findShortestPath(req: Request, res: Response) {
+    const { startId, endId } = req.params;
+
+    if (!startId || !endId) {
+      return res.status(400).json({ message: "Missing startId and endId" });
+    }
+
+    const topics = this.topicService.findShortestPath(startId, endId);
+    res.json(topics);
+  }
 }

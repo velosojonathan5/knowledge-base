@@ -45,6 +45,60 @@ export class TopicService {
   }
 
   getSubtopics(id: string): Topic[] {
-    return this.repository.getSubItemsRecursive(id);
+    const buildTree = (id: string): any => {
+      const hierarchy = this.repository.getHierarch(id);
+      const subtopicIds = hierarchy || new Set();
+      const subtopics = Array.from(subtopicIds).map((subId) =>
+        this.getById(subId)
+      ) as Topic[];
+
+      return {
+        ...this.getById(id),
+        children: subtopics.map((sub) => buildTree(sub.id)),
+      };
+    };
+
+    return buildTree(id);
+  }
+
+  findShortestPath(startId: string, endId: string): string[] | null {
+    console.log(startId, endId);
+
+    if (!this.repository.getById(startId) || !this.repository.getById(endId)) {
+      return null;
+    }
+
+    const queue: { topicId: string; path: string[] }[] = [
+      { topicId: startId, path: [startId] },
+    ];
+    const visited = new Set<string>();
+
+    while (queue.length > 0) {
+      const { topicId, path } = queue.shift()!;
+
+      if (topicId === endId) {
+        return path;
+      }
+
+      visited.add(topicId);
+
+      const hierarchy = this.repository.getHierarch(topicId);
+      const children = hierarchy || new Set();
+
+      const parent = [...this.getAll()]
+        .flat()
+        .find((topic) => topic.id === topicId)?.parentTopicId;
+
+      const neighbors = [...children];
+      if (parent) neighbors.push(parent);
+
+      for (const neighbor of neighbors) {
+        if (!visited.has(neighbor)) {
+          queue.push({ topicId: neighbor, path: [...path, neighbor] });
+        }
+      }
+    }
+
+    return null;
   }
 }

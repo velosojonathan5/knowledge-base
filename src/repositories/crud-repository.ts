@@ -6,5 +6,5 @@ export interface CRUDRepository<T extends BaseEntity> {
   insert(entity: T): T;
   update(entity: T, id: string): T;
   remove(condition: Record<string, unknown>): void;
-  getSubItemsRecursive(topicId: string): T[];
+  getHierarch(id: string): Set<string> | undefined;
 }

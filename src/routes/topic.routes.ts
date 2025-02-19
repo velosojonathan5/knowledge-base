@@ -21,5 +21,9 @@ router.get(
   "/:id/subtopics",
   topicController.getSubtopics.bind(topicController) as () => void
 );
+router.get(
+  "/:startId/shortest-path/:endId",
+  topicController.findShortestPath.bind(topicController) as () => void
+);
 
 export default router;
