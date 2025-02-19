@@ -35,7 +35,10 @@ export class TopicController {
   getById(req: Request, res: Response) {
     const { id } = req.params;
     const { version } = req.query;
-    const topic = this.topicService.getById(id, Number(version));
+    const topic = this.topicService.getById(
+      id,
+      version ? Number(version) : undefined
+    );
     res.json(topic);
   }
 

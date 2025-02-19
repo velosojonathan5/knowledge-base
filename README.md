@@ -12,3 +12,6 @@ This system should manage interconnected topics and resources with version contr
 
 `npm run dev`
 
+- run integration tests
+
+`npm run test`
